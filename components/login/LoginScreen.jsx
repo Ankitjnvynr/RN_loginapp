@@ -1,8 +1,53 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ActivityIndicator, Animated, Easing, Dimensions } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginRequest, loginSuccess, loginFailure } from '../redux/authSlice';
-import { router, useSegments } from 'expo-router'; // Using Expo Router for navigation
+import { router } from 'expo-router'; // Using Expo Router for navigation
+
+const { width, height } = Dimensions.get('window');
+
+const FALL_DURATION = 6000; // Duration for leaf to fall
+const NUM_LEAVES = 10; // Number of leaves to animate
+
+// Falling leaf component with delay
+const FallingLeaf = ({ source, startX, startY, delay }) => {
+  const translateY = useRef(new Animated.Value(startY)).current;
+  const translateX = useRef(new Animated.Value(startX)).current;
+
+  useEffect(() => {
+    const startFallingAnimation = () => {
+      translateY.setValue(-100); // Reset position to top
+      translateX.setValue(startX); // Set start position horizontally
+
+      Animated.sequence([
+        Animated.delay(delay), // Add delay before animation starts
+        Animated.parallel([
+          Animated.timing(translateY, {
+            toValue: height + 100, // End at the bottom of the screen
+            duration: FALL_DURATION,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+          Animated.timing(translateX, {
+            toValue: startX + Math.random() * 100 - 50, // Horizontal oscillation
+            duration: FALL_DURATION,
+            easing: Easing.inOut(Easing.quad),
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start(() => startFallingAnimation()); // Loop the animation
+    };
+
+    startFallingAnimation();
+  }, [translateX, translateY, delay]);
+
+  return (
+    <Animated.Image
+      source={source}
+      style={[styles.leaf, { transform: [{ translateY }, { translateX }] }]}
+    />
+  );
+};
 
 const LoginScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -30,8 +75,22 @@ const LoginScreen = () => {
     }
   };
 
+  // Generate falling leaves with random positions and delays
+  const leaves = Array.from({ length: NUM_LEAVES }).map((_, index) => (
+    <FallingLeaf
+      key={index}
+      source={require('../../assets/leaf.png')} // Use your leaf image here
+      startX={Math.random() * width}
+      startY={-Math.random() * height}
+      delay={index * 500} // Add delay between each leaf animation
+    />
+  ));
+
   return (
     <View style={styles.container}>
+      {/* Falling leaves animation, absolutely positioned */}
+      <View style={StyleSheet.absoluteFill}>{leaves}</View>
+
       {/* Logo */}
       <Image source={require('../../assets/logo.png')} style={styles.logo} />
 
@@ -110,6 +169,12 @@ const styles = StyleSheet.create({
   error: {
     color: 'red',
     marginTop: 10,
+  },
+  leaf: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
   },
 });
 
