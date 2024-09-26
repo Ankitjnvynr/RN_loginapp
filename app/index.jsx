@@ -17,7 +17,7 @@ export default function Index() {
     setTimeout(() => {
       setShowContent(true);
       fadeIn(); // Trigger the fade-in effect
-    }, 1000); // Delay of 3 seconds for video duration
+    }, 3000); // Delay of 3 seconds for video duration
   }, []);
 
   // Fade-in animation for the logo and button
