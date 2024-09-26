@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  isLoggedIn: false,
+  isLoggedIn: true,
   user: null,
   error: null,
   otpVerified: false, // New state to track OTP verification

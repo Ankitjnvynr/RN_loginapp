@@ -8,7 +8,7 @@ const OtpScreen = () => {
   const { phoneNumber } = useLocalSearchParams(); // Get phone number from navigation params
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
-  const [countdown, setCountdown] = useState(2); // Countdown timer for 30 seconds
+  const [countdown, setCountdown] = useState(30); // Countdown timer for 30 seconds
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
 
@@ -64,7 +64,7 @@ const OtpScreen = () => {
       </Text>
 
       {/* OTP verification button */}
-      <TouchableOpacity style={styles.submitButton} onPress={handleOtpVerification} disabled={loading || countdown > 0}>
+      <TouchableOpacity style={styles.submitButton} onPress={handleOtpVerification} disabled={loading }>
         {loading ? (
           <ActivityIndicator size="small" color="#fff" />
         ) : (
