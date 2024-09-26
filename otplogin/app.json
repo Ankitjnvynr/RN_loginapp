@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "authapp",
+    "name": "otplogin",
     "slug": "otplogin",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,8 +19,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.ankitjnvynr.otplogin"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -32,12 +31,6 @@
     ],
     "experiments": {
       "typedRoutes": true
-    },
-    "extra": {
-      "eas": {
-        "projectId": "9fe80fec-76c0-4f13-8b1f-1c76c9aa919f"
-      }
-    },
-    "owner": "ankitjnvynr"
+    }
   }
 }

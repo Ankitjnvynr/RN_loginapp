@@ -1,56 +1,60 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  isLoggedIn: false,
-  user: null,
-  error: null,
-  otpVerified: false, // New state to track OTP verification
+  user: null, // Store user info like phone number
+  error: null, // Store error messages
+  status: {
+    isLoggedIn: false, // Overall login status
+    otpVerified: false, // Track OTP verification status
+  },
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // Login request actions
+    // Login actions
     loginRequest: (state) => {
-      state.error = null; // Reset error state on login request
+      state.error = null; // Reset error when login starts
     },
     loginSuccess: (state, action) => {
-      state.user = action.payload; // Store user details (like phone number)
-      state.error = null;
+      state.user = action.payload; // Store user info (e.g., phone number)
+      state.status.isLoggedIn = false; // User isn't logged in until OTP is verified
+      state.status.otpVerified = false; // Reset OTP status for new login
+      state.error = null; // Clear any existing errors
     },
     loginFailure: (state, action) => {
-      state.error = action.payload; // Capture error message
-      state.isLoggedIn = false;
+      state.error = action.payload; // Store error on login failure
+      state.status.isLoggedIn = false;
     },
-    
+
     // OTP verification actions
     verifyOtpRequest: (state) => {
-      state.error = null; // Reset error state on OTP request
-      state.otpVerified = false;
+      state.error = null; // Clear error when OTP verification starts
     },
     verifyOtpSuccess: (state, action) => {
-      state.otpVerified = true; // Mark OTP as verified
-      state.isLoggedIn = true; // User is considered logged in after OTP verification
-      state.user = { ...state.user, ...action.payload }; // Optionally, update the user data
-      state.error = null;
+      state.status.otpVerified = true; // Mark OTP as verified
+      state.status.isLoggedIn = true; // User is logged in once OTP is verified
+      state.user = { ...state.user, ...action.payload }; // Optionally update user info
+      state.error = null; // Clear any existing errors
     },
     verifyOtpFailure: (state, action) => {
-      state.error = action.payload; // Capture error message for OTP failure
-      state.otpVerified = false;
-      state.isLoggedIn = false;
+      state.error = action.payload; // Capture OTP verification error
+      state.status.otpVerified = false; // OTP verification failed
+      state.status.isLoggedIn = false; // User not logged in
     },
 
     // Logout action
     logout: (state) => {
-      state.isLoggedIn = false;
-      state.user = null;
-      state.otpVerified = false; // Reset OTP verification status
-      state.error = null;
+      state.status.isLoggedIn = false;
+      state.status.otpVerified = false; // Reset OTP verification status
+      state.user = null; // Clear user data
+      state.error = null; // Clear error on logout
     },
   },
 });
 
+// Exporting actions for use in components
 export const {
   loginRequest,
   loginSuccess,

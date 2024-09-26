@@ -1,103 +1,76 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ActivityIndicator, Animated, Easing, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import * as Notifications from 'expo-notifications';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginRequest, loginSuccess, loginFailure } from '../redux/authSlice';
-import { router } from 'expo-router'; // Using Expo Router for navigation
-
-const { width, height } = Dimensions.get('window');
-
-const FALL_DURATION = 6000; // Duration for leaf to fall
-const NUM_LEAVES = 10; // Number of leaves to animate
-
-// Falling leaf component with delay
-const FallingLeaf = ({ source, startX, startY, delay }) => {
-  const translateY = useRef(new Animated.Value(startY)).current;
-  const translateX = useRef(new Animated.Value(startX)).current;
-
-  useEffect(() => {
-    const startFallingAnimation = () => {
-      translateY.setValue(-100); // Reset position to top
-      translateX.setValue(startX); // Set start position horizontally
-
-      Animated.sequence([
-        Animated.delay(delay), // Add delay before animation starts
-        Animated.parallel([
-          Animated.timing(translateY, {
-            toValue: height + 100, // End at the bottom of the screen
-            duration: FALL_DURATION,
-            easing: Easing.linear,
-            useNativeDriver: true,
-          }),
-          Animated.timing(translateX, {
-            toValue: startX + Math.random() * 100 - 50, // Horizontal oscillation
-            duration: FALL_DURATION,
-            easing: Easing.inOut(Easing.quad),
-            useNativeDriver: true,
-          }),
-        ]),
-      ]).start(() => startFallingAnimation()); // Loop the animation
-    };
-
-    startFallingAnimation();
-  }, [translateX, translateY, delay]);
-
-  return (
-    <Animated.Image
-      source={source}
-      style={[styles.leaf, { transform: [{ translateY }, { translateX }] }]}
-    />
-  );
-};
+import { router } from 'expo-router';
 
 const LoginScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [tokenFetched, setTokenFetched] = useState(false); // New state to track token fetching
   const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth);
 
-  // Handle phone number login
-  const handleLogin = () => {
+  // Request notification permission and get push token
+  useEffect(() => {
+    registerForPushNotificationsAsync()
+      .then(token => {
+        if (token) {
+          setExpoPushToken(token);
+          setTokenFetched(true); // Set flag to true when token is successfully fetched
+        } else {
+          Alert.alert("Error", "Unable to get Expo push token.");
+        }
+      })
+      .catch(error => {
+        Alert.alert("Error", "An error occurred while fetching push token.");
+        console.error("Error fetching push token:", error);
+      });
+  }, []);
+
+  const generateOtp = () => {
+    return Math.floor(1000 + Math.random() * 9000).toString();
+  };
+
+  const handleLogin = async () => {
     if (phoneNumber.trim() === '') {
       dispatch(loginFailure('Phone number cannot be empty'));
       return;
     }
 
-    dispatch(loginRequest());
+    if (!tokenFetched) {
+      Alert.alert('Error', 'Push token has not been fetched. Please wait a moment.');
+      return;
+    }
 
-    // Simulate login logic (replace this with API logic)
-    if (phoneNumber === '1234567890') {
-      // On successful login
-      dispatch(loginSuccess({ phoneNumber }));
-      router.push('/login/otp'); // Navigate to OTP screen
-    } else {
-      // On login failure
-      dispatch(loginFailure('Invalid phone number'));
+    dispatch(loginRequest());
+    setLoading(true);
+
+    try {
+      const otp = generateOtp();
+      console.log('Generated OTP:', otp); // For debugging
+
+      // Send OTP via push notification
+      if (expoPushToken) {
+        await sendPushNotification(expoPushToken, otp);
+        dispatch(loginSuccess({ phoneNumber, otp }));
+        router.push('/login/otp');
+      } else {
+        dispatch(loginFailure('Failed to get push token.'));
+        Alert.alert('Error', 'Push token is missing.');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      dispatch(loginFailure('Login failed.'));
+      Alert.alert('Error', 'An error occurred during login.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Generate falling leaves with random positions and delays
-  const leaves = Array.from({ length: NUM_LEAVES }).map((_, index) => (
-    <FallingLeaf
-      key={index}
-      source={require('../../assets/leaf.png')} // Use your leaf image here
-      startX={Math.random() * width}
-      startY={-Math.random() * height}
-      delay={index * 500} // Add delay between each leaf animation
-    />
-  ));
-
   return (
     <View style={styles.container}>
-      {/* Falling leaves animation, absolutely positioned */}
-      <View style={StyleSheet.absoluteFill}>{leaves}</View>
-
-      {/* Logo */}
-      <Image source={require('../../assets/logo.png')} style={styles.logo} />
-
-      {/* Title */}
-      <Text style={styles.title}>Login to your account</Text>
-
-      {/* Input field for phone number login */}
       <TextInput
         style={styles.input}
         placeholder="Enter phone number"
@@ -106,7 +79,6 @@ const LoginScreen = () => {
         keyboardType="phone-pad"
       />
 
-      {/* Phone login submit button */}
       <TouchableOpacity style={styles.submitButton} onPress={handleLogin} disabled={loading}>
         {loading ? (
           <ActivityIndicator size="small" color="#fff" />
@@ -114,12 +86,6 @@ const LoginScreen = () => {
           <Text style={styles.submitButtonText}>Login with Phone</Text>
         )}
       </TouchableOpacity>
-
-      {/* Error message */}
-      {auth.error && <Text style={styles.error}>{auth.error}</Text>}
-
-      {/* Welcome message */}
-      {auth.isAuthenticated && <Text>Welcome, {auth.user?.phoneNumber || auth.user?.name}!</Text>}
     </View>
   );
 };
@@ -130,18 +96,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
-  },
-  logo: {
-    width: 150,
-    height: 150,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#8B3E2F',
-    marginBottom: 20,
   },
   input: {
     width: '100%',
@@ -166,23 +120,57 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  error: {
-    color: 'red',
-    marginTop: 10,
-  },
-  leaf: {
-    position: 'absolute',
-    width: 50,
-    height: 50,
-    resizeMode: 'contain',
-  },
 });
 
-// Expo Router configuration to hide the header
-export const config = {
-  options: {
-    headerShown: false, // Hides the header on this screen
-  },
-};
-
 export default LoginScreen;
+
+// Push notification registration and sending functions
+async function registerForPushNotificationsAsync() {
+  try {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+
+    if (finalStatus !== 'granted') {
+      throw new Error('Notification permissions not granted');
+    }
+
+    const token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log('Expo Push Token:', token); // Debugging
+    return token;
+  } catch (error) {
+    console.error("Failed to register for notifications:", error);
+    return null;
+  }
+}
+
+async function sendPushNotification(expoPushToken, otp) {
+  const message = {
+    to: expoPushToken,
+    sound: 'default',
+    title: 'Your OTP Code',
+    body: `Your OTP is ${otp}`,
+    data: { otp },
+  };
+
+  try {
+    const response = await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(message),
+    });
+
+    const result = await response.json();
+    console.log('Push Notification Sent:', result);
+  } catch (error) {
+    console.error('Error sending push notification:', error);
+    throw error;
+  }
+}
