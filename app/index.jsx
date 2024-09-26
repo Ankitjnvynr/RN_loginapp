@@ -17,7 +17,7 @@ export default function Index() {
     setTimeout(() => {
       setShowContent(true);
       fadeIn(); // Trigger the fade-in effect
-    }, 3000); // Delay of 3 seconds for video duration
+    }, 1000); // Delay of 3 seconds for video duration
   }, []);
 
   // Fade-in animation for the logo and button
@@ -45,6 +45,8 @@ export default function Index() {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "black",
+        gap:20,
+        
       }}
     >
       {/* Video Component */}
@@ -72,11 +74,12 @@ export default function Index() {
               height: 100, // Adjust the size as needed
               width: 100,
               zIndex: 2,
+              marginTop:140
             }}
             source={require("../assets/logo.png")} // Use require for local assets
           />
           <Text style={{ color: "white", fontSize: 40, marginBottom: 20 }}>
-            Your Logo
+            GIEO GITA
           </Text>
 
           {/* Get Started Button */}
@@ -87,6 +90,7 @@ export default function Index() {
               padding: 15,
               borderRadius: 5,
               alignItems: "center",
+              marginTop:10
             }}
           >
             <Text style={{ fontSize: 18, color: "black" }}>Get Started</Text>
