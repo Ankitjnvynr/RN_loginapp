@@ -9,6 +9,7 @@ export default function TabLayout() {
   const router = useRouter();
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn); // Get login status from Redux
   const [isMounted, setIsMounted] = useState(false); // Track if the component is mounted
+  const colorScheme = useColorScheme(); // Move the hook outside the conditional rendering
 
   // Simulate component mount
   useEffect(() => {
@@ -26,13 +27,11 @@ export default function TabLayout() {
     return null; // Return nothing until layout is mounted or user is logged in
   }
 
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false, // Hide the header for the tab layout
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint, // Ensure colorScheme is used here
+        headerShown: true, // Hide the header for the tab layout
       }}
     >
       {/* Home Tab */}
