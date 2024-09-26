@@ -2,20 +2,22 @@ import React, { useEffect, useRef, useState } from "react";
 import { View, Text, Pressable, Animated, Image } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { Video } from "expo-av";
+import { useSelector } from "react-redux";
 
 export default function Index() {
   const [isLoggedIn, setIsLoggedIn] = useState(true); // Simulate user login state
   const [showContent, setShowContent] = useState(false); // To control fade-in content
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity for fade-in effect
   const router = useRouter();
+  const checklogin = useSelector((state) => state.auth.isLoggedIn);
 
   useEffect(() => {
     // Simulate login check
     const checkLoginStatus = async () => {
       // Simulate an API call or login state check
       setTimeout(() => {
-        setIsLoggedIn(false); // Set to true if user is logged in
-      }, 1000); // Delay for 1 second for simulation
+        setIsLoggedIn(checklogin); // Set to true if user is logged in
+      }, 100); // Delay for 1 second for simulation
     };
 
     checkLoginStatus();

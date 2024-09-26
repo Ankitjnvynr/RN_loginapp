@@ -9,9 +9,9 @@ export default function Index() {
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      router.replace('/'); // Redirect to the home page if logged in
-    }
+    // if (isLoggedIn) {
+    //   router.replace('/'); // Redirect to the home page if logged in
+    // }
   }, [isLoggedIn]);
 
   return (

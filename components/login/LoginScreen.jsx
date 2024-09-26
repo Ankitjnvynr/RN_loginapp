@@ -23,7 +23,7 @@ const LoginScreen = () => {
     if (phoneNumber === '1234567890') {
       // On successful login
       dispatch(loginSuccess({ phoneNumber }));
-      router.push('/otp'); // Navigate to OTP screen
+      router.push('/login/otp'); // Navigate to OTP screen
     } else {
       // On login failure
       dispatch(loginFailure('Invalid phone number'));
