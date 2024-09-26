@@ -25,7 +25,7 @@ const FallingLeaf = ({ source, startX, startY, delay }) => {
           Animated.timing(translateY, {
             toValue: height + 100, // End at the bottom of the screen
             duration: FALL_DURATION,
-            easing: Easing.linear,
+            easing: Easing.Radial,
             useNativeDriver: true,
           }),
           Animated.timing(translateX, {
@@ -44,7 +44,7 @@ const FallingLeaf = ({ source, startX, startY, delay }) => {
   return (
     <Animated.Image
       source={source}
-      style={[styles.leaf, { transform: [{ translateY }, { translateX }] }]}
+      style={[styles.leaf, { transform: [{ translateY }, { translateX }] }] }
     />
   );
 };
@@ -172,8 +172,8 @@ const styles = StyleSheet.create({
   },
   leaf: {
     position: 'absolute',
-    width: 50,
-    height: 50,
+    width: 80, // Increased the width
+    height: 80, // Increased the height
     resizeMode: 'contain',
   },
 });
