@@ -1,6 +1,5 @@
 import { Tabs, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -18,21 +17,25 @@ export default function TabLayout() {
 
   useEffect(() => {
     if (isMounted && !isLoggedIn) {
-      router.replace('/login'); // Redirect to login after mount
+      router.replace('/login'); // Redirect to login if not logged in after mount
     }
   }, [isMounted, isLoggedIn]);
 
+  // Prevent the layout from rendering until the component is mounted and user login is verified
   if (!isMounted || !isLoggedIn) {
-    return null; // Return nothing until layout is mounted
+    return null; // Return nothing until layout is mounted or user is logged in
   }
+
   const colorScheme = useColorScheme();
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}>
+        headerShown: false, // Hide the header for the tab layout
+      }}
+    >
+      {/* Home Tab */}
       <Tabs.Screen
         name="index"
         options={{
@@ -42,12 +45,14 @@ export default function TabLayout() {
           ),
         }}
       />
+
+      {/* Profile Tab */}
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Explore',
+          title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+            <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color} />
           ),
         }}
       />

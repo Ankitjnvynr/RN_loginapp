@@ -1,28 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, Text, Pressable, Animated, Image } from "react-native";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Video } from "expo-av";
 import { useSelector } from "react-redux";
 
 export default function Index() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Simulate user login state
-  const [showContent, setShowContent] = useState(false); // To control fade-in content
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity for fade-in effect
+  const [showContent, setShowContent] = useState(false); // To control fade-in content
   const router = useRouter();
-  const checklogin = useSelector((state) => state.auth.isLoggedIn);
+
+  // Access login status from Redux store
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   useEffect(() => {
-    // Simulate login check
-    const checkLoginStatus = async () => {
-      // Simulate an API call or login state check
-      setTimeout(() => {
-        setIsLoggedIn(checklogin); // Set to true if user is logged in
-      }, 100); // Delay for 1 second for simulation
-    };
-
-    checkLoginStatus();
-
-    // Show the content (logo and button) after video plays for 3 seconds
+    // Show the content (logo and button) after the video plays for 3 seconds
     setTimeout(() => {
       setShowContent(true);
       fadeIn(); // Trigger the fade-in effect
@@ -40,14 +31,9 @@ export default function Index() {
 
   // Handle button click
   const handleGetStarted = () => {
-    
     if (isLoggedIn) {
-        console.log("yes");
-        
       router.push("/home"); // Navigate to home if logged in
     } else {
-        console.log('No');
-        
       router.push("/login"); // Navigate to login if not logged in
     }
   };
@@ -95,9 +81,7 @@ export default function Index() {
 
           {/* Get Started Button */}
           <Pressable
-            onPress={()=>{
-                router.push('/login');
-            }}
+            onPress={handleGetStarted}
             style={{
               backgroundColor: "white",
               padding: 15,
@@ -107,7 +91,6 @@ export default function Index() {
           >
             <Text style={{ fontSize: 18, color: "black" }}>Get Started</Text>
           </Pressable>
-          <Link href={'/login'} >go to loign</Link>
         </Animated.View>
       )}
     </View>
