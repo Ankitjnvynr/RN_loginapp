@@ -8,7 +8,7 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 
 export default function TabLayout() {
   const router = useRouter();
-  const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn); // Get login status from Redux
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn); // Get login status from Redux
   const [isMounted, setIsMounted] = useState(false); // Track if the component is mounted
   const colorScheme = useColorScheme(); // Move the hook outside the conditional rendering
 
@@ -33,27 +33,12 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint, // Ensure colorScheme is used here
         headerShown: true, // Hide the header for the tab layout
-        headerLeft: () => (
-          <Image
-            source={require("@/assets/logo.png")} // Adjust the path to your logo image
-            style={{ width: 50, height: 50, marginLeft: 10 }} // Set appropriate width and height for your logo
-          />
-        ),
-        headerTitle: () => (
-          <View style={styles.headingbox}>
-            <Text style={styles.headingBig}>Gita Jeewan Geet</Text>
-            <Text style={styles.headingSmall}>Eighteen verse Gita recition campaign</Text>
-          </View>
-        ),
-        headerRight: () => (
-          <Link href={"/settings"}>
-            <Image
-              source={require("@/assets/images/avtar.png")} // Adjust the path to your avatar image
-              style={styles.headerRightImage} // Set appropriate width, height, and position for your image
-            />
-          </Link>
-        ),
-        headerTitleAlign: "center", // Center-align the header title
+       
+        headerStyle:{
+            height:30
+        },
+        headerTitleAlign:'center'
+
       
       }}
     >
@@ -72,7 +57,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="chants"
         options={{
-          title: 'Dharam',
+          title: 'Chants',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color} />
           ),

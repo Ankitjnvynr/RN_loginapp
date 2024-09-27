@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'rea
 import { MaterialIcons } from '@expo/vector-icons';
 
 // Define the App component
-export default function App() {
+export default function chantsScreen() {
   const [showChants, setShowChants] = useState(false);
 
   // Conditional rendering based on showChants state
@@ -75,7 +75,7 @@ export default function App() {
 
 // Define types for ChantsScreen
 type ChantsScreenProps = {
-  setShowChants: (show: boolean) => void;
+  setShowChants: (show) => void;
 };
 
 // ChantsScreen component
