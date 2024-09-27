@@ -1,11 +1,19 @@
-import { View, Text } from "react-native";
-import React from "react";
-import { Stack } from "expo-router";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Drawer } from 'expo-router/drawer';
 
-export default function SettingLayout() {
+export default function Layout() {
   return (
-    <Stack headerTitle="settings">
-      <Stack.Screen name="index" />
-    </Stack>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Drawer>
+        <Drawer.Screen
+          name="index" // This is the name of the page and must match the url from root
+          options={{
+            drawerLabel: 'Home',
+            title: 'overview',
+          }}
+        />
+        
+      </Drawer>
+    </GestureHandlerRootView>
   );
 }
