@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export default function LogoutScreen () {
+export default function profile() {
   return (
     <View>
-      <Text>LogoutScreen </Text>
+      <Text>profile</Text>
     </View>
   )
 }

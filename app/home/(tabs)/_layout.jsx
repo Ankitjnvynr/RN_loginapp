@@ -63,19 +63,20 @@ export default function TabLayout() {
           ),
         }}
       />
-       <Tabs.Screen
-        name="seva"
+       
+      <Tabs.Screen
+        name="reading"
         options={{
-          title: 'seva',
+          title: 'reading',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="reading"
+        name="profile"
         options={{
-          title: 'reading',
+          title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color} />
           ),
