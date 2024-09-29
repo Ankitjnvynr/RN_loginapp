@@ -25,7 +25,7 @@ const FallingLeaf = ({ source, startX, startY, delay }) => {
           Animated.timing(translateY, {
             toValue: height + 100, // End at the bottom of the screen
             duration: FALL_DURATION,
-            easing: Easing.Radial,
+            easing: Easing.radial,
             useNativeDriver: true,
           }),
           Animated.timing(translateX, {
@@ -44,42 +44,55 @@ const FallingLeaf = ({ source, startX, startY, delay }) => {
   return (
     <Animated.Image
       source={source}
-      style={[styles.leaf, { transform: [{ translateY }, { translateX }] }] }
+      style={[styles.leaf, { transform: [{ translateY }, { translateX }] }]}
     />
   );
 };
 
 const LoginScreen = () => {
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
 
   // Handle phone number login
   const handleLogin = () => {
-    if (phoneNumber.trim() === '') {
-      dispatch(loginFailure('Phone number cannot be empty'));
+    if (phoneNumber.trim() === "") {
+      dispatch(loginFailure("Phone number cannot be empty"));
       return;
     }
 
     dispatch(loginRequest());
+    setLoading(true);
 
-    // Simulate login logic (replace this with API logic)
-    if (phoneNumber === '1234567890') {
-      // On successful login
-      dispatch(loginSuccess({ phoneNumber }));
-      router.push('/login/otp'); // Navigate to OTP screen
-    } else {
-      // On login failure
-      dispatch(loginFailure('Invalid phone number'));
-    }
+    // Simulate login logic (replace this with your actual API logic)
+    setTimeout(() => {
+      // Simulated login success
+      if (phoneNumber) {
+        // Use the phone number from your auth slice for the simulation
+        dispatch(
+          loginSuccess({
+            name: "ankit",
+            phone: phoneNumber,
+            dob: "2/9/2024",
+            address: "VPO BAkana",
+          })
+        );
+        setLoading(false);
+        router.push("/login/otp"); // Navigate to OTP screen
+      } else {
+        // On login failure
+        dispatch(loginFailure("Invalid phone number"));
+        setLoading(false);
+      }
+    }, 1000);
   };
 
   // Generate falling leaves with random positions and delays
   const leaves = Array.from({ length: NUM_LEAVES }).map((_, index) => (
     <FallingLeaf
       key={index}
-      source={require('../../assets/leaf.png')} // Use your leaf image here
+      source={require("../../assets/leaf.png")} // Use your leaf image here
       startX={Math.random() * width}
       startY={-Math.random() * height}
       delay={index * 500} // Add delay between each leaf animation
@@ -92,7 +105,7 @@ const LoginScreen = () => {
       <View style={StyleSheet.absoluteFill}>{leaves}</View>
 
       {/* Logo */}
-      <Image source={require('../../assets/logo.png')} style={styles.logo} />
+      <Image source={require("../../assets/logo.png")} style={styles.logo} />
 
       {/* Title */}
       <Text style={styles.title}>Login to your account</Text>
@@ -107,7 +120,11 @@ const LoginScreen = () => {
       />
 
       {/* Phone login submit button */}
-      <TouchableOpacity style={styles.submitButton} onPress={handleLogin} disabled={loading}>
+      <TouchableOpacity
+        style={styles.submitButton}
+        onPress={handleLogin}
+        disabled={loading}
+      >
         {loading ? (
           <ActivityIndicator size="small" color="#fff" />
         ) : (
@@ -119,7 +136,7 @@ const LoginScreen = () => {
       {auth.error && <Text style={styles.error}>{auth.error}</Text>}
 
       {/* Welcome message */}
-      {auth.isAuthenticated && <Text>Welcome, {auth.user?.phoneNumber || auth.user?.name}!</Text>}
+      {auth.isLoggedIn && <Text>Welcome, {auth.user?.name}!</Text>}
     </View>
   );
 };
@@ -127,10 +144,10 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   logo: {
     width: 150,
@@ -139,43 +156,43 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontWeight: 'bold',
-    color: '#8B3E2F',
+    fontWeight: "bold",
+    color: "#8B3E2F",
     marginBottom: 20,
   },
   input: {
-    width: '100%',
+    width: "100%",
     height: 50,
-    borderColor: '#e0e0e0',
+    borderColor: "#e0e0e0",
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 10,
     marginBottom: 20,
-    zIndex:10,
+    zIndex: 10,
   },
   submitButton: {
-    width: '100%',
+    width: "100%",
     height: 50,
-    backgroundColor: '#FF8C00',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#FF8C00",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 8,
     marginBottom: 20,
   },
   submitButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   error: {
-    color: 'red',
+    color: "red",
     marginTop: 10,
   },
   leaf: {
-    position: 'absolute',
+    position: "absolute",
     width: 80, // Increased the width
     height: 80, // Increased the height
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
 });
 
