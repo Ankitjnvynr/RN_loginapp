@@ -80,6 +80,9 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color} />
           ),
+          presentation: 'transparentModal',
+          animation: 'fade',
+          headerShown: false,
         }}
       />
     </Tabs>

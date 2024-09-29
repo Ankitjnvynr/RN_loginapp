@@ -3,6 +3,7 @@ import { Drawer } from 'expo-router/drawer';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 
+
 export default function HomeLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -14,14 +15,7 @@ export default function HomeLayout() {
               <Text style={styles.headingSmall}>Eighteen verse Gita recitation campaign</Text>
             </View>
           ),
-          headerRight: () => (
-            <Link href={"/settings"}>
-              <Image
-                source={require("@/assets/images/avtar.png")} // Adjust the path to your avatar image
-                style={styles.headerRightImage} // Set appropriate width, height, and position for your image
-              />
-            </Link>
-          ),
+         
           headerTitleAlign: "center",
         }}
       >
@@ -47,6 +41,7 @@ const styles = StyleSheet.create({
   headingBig: {
     fontSize: 20, // Bigger font size
     fontWeight: "bold", // Bold text
+    color:'',
   },
   headingSmall: {
     fontSize: 11, // Smaller font size for subtitle
