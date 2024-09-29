@@ -37,32 +37,35 @@ const YourChants = () => {
 const styles = StyleSheet.create({
   container: {
     marginVertical: 20,
-    alignItems: 'center',
-    backgroundColor:'#fff',
-    paddingVertical:20,
-    
+    alignItems: "center",
+    backgroundColor: "#fff",
+    paddingVertical: 20,
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   chantsSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 10,
+    flex: 1,
+    width: "100%",
+    padding: 20,
   },
   totalChantsBox: {
-    backgroundColor: '#fff',
-    borderColor: '#7B1B1B', // Dark red border
+    backgroundColor: "#fff",
+    borderColor: "#7B1B1B", // Dark red border
     borderWidth: 2,
     borderRadius: 10,
     paddingVertical: 20,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 20,
-    shadowColor: '#000',
+    paddingHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    // marginRight: 20,
+    shadowColor: "#000",
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5,
@@ -70,44 +73,44 @@ const styles = StyleSheet.create({
   },
   chantsNumber: {
     fontSize: 32,
-    fontWeight: 'bold',
-    color: '#000', // Black color for the text
+    fontWeight: "bold",
+    color: "#000", // Black color for the text
   },
   label: {
-    fontSize: 16,
-    color: '#000', // Label color
+    fontSize: 13,
+    color: "#000", // Label color
     marginBottom: 10,
   },
   progressContainer: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     // height: '100%',
   },
   progressBox: {
-    backgroundColor: '#fff',
-    borderColor: '#7B1B1B',
+    backgroundColor: "#fff",
+    borderColor: "#7B1B1B",
     borderWidth: 2,
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
     marginBottom: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5,
     elevation: 5, // Shadow for Android
-    flex:1,
-    flexDirection:'row'
+    flex: 1,
+    flexDirection: "row",
   },
   progressLabel: {
-    fontSize: 16,
-    color: '#000', // Progress label color
+    fontSize: 13,
+    color: "#000", // Progress label color
   },
   progressNumber: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000',
+    fontWeight: "bold",
+    color: "#000",
   },
 });
 

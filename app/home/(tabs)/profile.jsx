@@ -3,6 +3,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import Animated, { FadeIn, SlideInDown } from "react-native-reanimated";
 import { Link, useRouter } from "expo-router";
+import {EditUserDetails} from "@/components";
 
 export default function ProfileModal() {
   const user = useSelector((state) => state.auth.user); // Fetch user data from Redux
@@ -19,7 +20,7 @@ export default function ProfileModal() {
       }}
     >
       {/* Close modal by pressing outside */}
-      <Link href="/home" asChild>
+      <Link href="../" asChild>
         <Pressable style={StyleSheet.absoluteFill} />
       </Link>
 
@@ -36,37 +37,11 @@ export default function ProfileModal() {
         }}
       >
         {/* Close button in top right */}
-        <Pressable
-          onPress={() => router.push("/home")}
-          style={styles.closeButton}
-        >
+        <Pressable onPress={() => router.back()} style={styles.closeButton}>
           <Text style={styles.closeText}>✖</Text>
         </Pressable>
 
-        {/* User Information */}
-        <Text style={styles.title}>User Profile</Text>
-        {user ? (
-          <View style={styles.userInfo}>
-            <Text>Name: {user.name || "N/A"}</Text>
-            <Text>Email: {user.email || "N/A"}</Text>
-            <Text>Phone: {user.phone || "N/A"}</Text>
-          </View>
-        ) : (
-          <Text>No user data available</Text>
-        )}
-
-        {/* Edit Info Button */}
-        <Pressable
-          style={styles.editButton}
-          onPress={() => router.push("/edit-profile")} // Navigate to the edit profile page
-        >
-          <Text style={styles.editButtonText}>Edit Info</Text>
-        </Pressable>
-
-        {/* Go back link */}
-        <Link href="/home">
-          <Text>← Go back</Text>
-        </Link>
+        <EditUserDetails />
       </Animated.View>
     </Animated.View>
   );
@@ -80,6 +55,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#ccc",
     padding: 5,
     borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
   },
   closeText: {
     fontSize: 16,

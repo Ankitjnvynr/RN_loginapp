@@ -42,8 +42,9 @@ const TotalChants = () => {
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <Text style={styles.label}>Total Chants</Text>
       <View style={styles.chantsContainer}>
-        <Text style={styles.chantsText}>{totalChants.toLocaleString()}</Text>{" "}
-        {/* Format number with commas */}
+        <Text style={styles.chantsText}>
+          {totalChants.toLocaleString()} {/* Ensuring number is within <Text> */}
+        </Text>
       </View>
     </Animated.View>
   );
