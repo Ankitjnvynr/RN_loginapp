@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   counter: {
-    width: 100,
+    width: 80,
     height: 220,
     justifyContent: "center",
     alignItems: "center",

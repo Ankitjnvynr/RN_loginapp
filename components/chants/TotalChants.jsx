@@ -1,23 +1,51 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { View, Text, StyleSheet, Animated } from "react-native";
 
 const TotalChants = () => {
   // Fetching number from Redux store
   const totalChantsFromStore = 23562558;
   const [totalChants, setTotalChants] = useState(0);
 
+  // Animation value
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
-    // Update state with value from Redux store
-    setTotalChants(totalChantsFromStore);
+    // Trigger the fade-in animation when the component mounts
+    Animated.timing(fadeAnim, {
+      toValue: 1, // Final opacity
+      duration: 1000, // Animation duration in ms
+      useNativeDriver: true,
+    }).start();
+
+    // Increase the number gradually
+    let start = 0;
+    const end = totalChantsFromStore;
+    const duration = 2000; // Total duration for counting up in ms
+    const incrementTime = 50; // Time for each increment in ms
+    const totalSteps = Math.ceil(duration / incrementTime); // Total steps for animation
+
+    const increment = Math.ceil(end / totalSteps); // Increment value for each step
+    const interval = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        start = end; // Ensure it doesn't exceed
+        clearInterval(interval);
+      }
+      setTotalChants(start);
+    }, incrementTime);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
   }, [totalChantsFromStore]);
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <Text style={styles.label}>Total Chants</Text>
       <View style={styles.chantsContainer}>
-        <Text style={styles.chantsText}>{totalChants}</Text>
+        <Text style={styles.chantsText}>{totalChants.toLocaleString()}</Text>{" "}
+        {/* Format number with commas */}
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
