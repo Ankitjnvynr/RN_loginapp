@@ -30,7 +30,7 @@ const OtpScreen = () => {
     dispatch(verifyOtpRequest());
 
     // Simulate OTP verification logic (replace with actual API call)
-    if (otp === '1234') {
+    if (otp === auth.user.otp) {
       // On successful OTP verification
       dispatch(verifyOtpSuccess({ phoneNumber }));
       router.push('/home'); // Navigate to home or desired screen

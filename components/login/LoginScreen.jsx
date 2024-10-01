@@ -74,12 +74,15 @@ const LoginScreen = () => {
         // On successful OTP send, dispatch login success and navigate to OTP screen
         dispatch(
           loginSuccess({
-            name: "ankit", // Add your actual user data or just keep it as a placeholder for now
+            name: "Guest", // Add your actual user data or just keep it as a placeholder for now
             phone: phoneNumber,
-            dob: "2/9/2024",
-            address: "VPO BAkana",
+            dob: "",
+            address: "",
+            otp:res.otp,
           })
         );
+        console.log(res.otp);
+        
         setLoading(false);
         router.push("/login/otp"); // Navigate to OTP screen
       } else {

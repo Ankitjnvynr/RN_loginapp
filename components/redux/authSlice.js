@@ -4,6 +4,7 @@ const initialState = {
   isLoggedIn: false,
   user: null,
   error: null,
+  currentOtp:'1111',
   otpVerified: false, // New state to track OTP verification
 };
 
