@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ActivityInd
 import { useDispatch, useSelector } from 'react-redux';
 import { loginRequest, loginSuccess, loginFailure } from '../redux/authSlice';
 import { router } from 'expo-router'; // Using Expo Router for navigation
+import { sendOtp } from "@/components/backend"; // Import your sendOtp function
 
 const { width, height } = Dimensions.get('window');
 
@@ -55,8 +56,8 @@ const LoginScreen = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
 
-  // Handle phone number login
-  const handleLogin = () => {
+  // Handle phone number login with OTP
+  const handleLogin = async () => {
     if (phoneNumber.trim() === "") {
       dispatch(loginFailure("Phone number cannot be empty"));
       return;
@@ -65,14 +66,15 @@ const LoginScreen = () => {
     dispatch(loginRequest());
     setLoading(true);
 
-    // Simulate login logic (replace this with your actual API logic)
-    setTimeout(() => {
-      // Simulated login success
-      if (phoneNumber) {
-        // Use the phone number from your auth slice for the simulation
+    try {
+      // Call sendOtp to send OTP to the provided phone number
+      const res = await sendOtp(phoneNumber);
+
+      if (res.success) {
+        // On successful OTP send, dispatch login success and navigate to OTP screen
         dispatch(
           loginSuccess({
-            name: "ankit",
+            name: "ankit", // Add your actual user data or just keep it as a placeholder for now
             phone: phoneNumber,
             dob: "2/9/2024",
             address: "VPO BAkana",
@@ -81,11 +83,15 @@ const LoginScreen = () => {
         setLoading(false);
         router.push("/login/otp"); // Navigate to OTP screen
       } else {
-        // On login failure
-        dispatch(loginFailure("Invalid phone number"));
+        // If sending OTP fails, show error message
+        dispatch(loginFailure(res.error || "Failed to send OTP"));
         setLoading(false);
       }
-    }, 1000);
+    } catch (error) {
+      // Handle any other errors
+      dispatch(loginFailure(error.message));
+      setLoading(false);
+    }
   };
 
   // Generate falling leaves with random positions and delays
@@ -98,7 +104,7 @@ const LoginScreen = () => {
       delay={index * 500} // Add delay between each leaf animation
     />
   ));
-
+  
   return (
     <View style={styles.container}>
       {/* Falling leaves animation, absolutely positioned */}
