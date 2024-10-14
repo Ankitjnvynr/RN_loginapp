@@ -1,6 +1,4 @@
-const apiUrl = "https://app.jflindia.co.in/api/v1/message/create"; // API endpoint
-const apiUser = process.env.EXPO_PUBLIC_WA_USER; // Your API username
-const apikey = process.env.EXPO_PUBLIC_WAKEY; // Your API key or token
+fullUrl = `https://parivaar.gieogita.org/login/api/_api_config.php`;
 
 export const sendOtp = async (phoneNumber) => {
   try {
@@ -13,27 +11,19 @@ export const sendOtp = async (phoneNumber) => {
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     const message = `Your verification code is: ${otp}`;
 
-    // Construct the query parameters for the GET request
-    const queryParams = new URLSearchParams({
-      username: apiUser,
-      password: apikey, // You might not need both username and password if using a token
-      receiverMobileNo: phoneNumber,
-      message: message,
-    });
-
-    // Log the full API URL with query parameters for debugging
-    const fullUrl = `${apiUrl}?${queryParams.toString()}`;
-    console.log("Full API URL:", fullUrl);
+    // Create a FormData object
+    const formData = new FormData();
+    formData.append("phone", phoneNumber);
+    formData.append("message", message);
 
     // Send the GET request to the API
     const response = await fetch(fullUrl, {
-      method: "GET",
+      method: 'POST',
+      body: formData,
       headers: {
-        "Accept": "application/json",        // Expecting JSON response
-        "Authorization": `Bearer ${apikey}`, // Add Authorization (Bearer or Basic as per API)
-        "Host": "app.jflindia.co.in",        // Explicitly set the Host header if required
-        // You may also add the Origin header if the API requires it
-        // "Origin": "your-origin-here",
+        // 'Content-Type' is not needed when sending FormData,
+        // fetch automatically sets it with proper boundary.
+        // 'Content-Type': 'multipart/form-data'
       },
     }).catch((networkError) => {
       // Handle fetch-level errors (like no internet)
@@ -43,7 +33,7 @@ export const sendOtp = async (phoneNumber) => {
 
     // Log response status and headers
     console.log("Response Status:", response.status);
-    console.log("Response Headers:", JSON.stringify([...response.headers]));
+    //console.log("Response Headers:", JSON.stringify([...response.headers]));
 
     // Get the response text
     const responseText = await response.text();
@@ -60,13 +50,13 @@ export const sendOtp = async (phoneNumber) => {
     }
 
     // Check content type for JSON
-    const contentType = response.headers.get("Content-Type");
+    //const contentType = response.headers.get("Content-Type");
     let data;
-    if (contentType && contentType.includes("application/json")) {
-      data = JSON.parse(responseText); // Parse JSON response
-    } else {
-      throw new Error(`Unexpected content type: ${contentType}`);
-    }
+    data = JSON.parse(responseText); // Parse JSON response
+    // if (contentType && contentType.includes("application/json")) {
+    // } else {
+    //   throw new Error(`Unexpected content type: ${contentType}`);
+    // }
 
     // Return success response
     return {
