@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "authapp",
-    "slug": "authapp",
+    "name": "GIEO Gita",
+    "slug": "gieogita",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.gieogita.org"
     },
     "web": {
       "bundler": "metro",
@@ -31,6 +32,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a1bfd3ab-775e-4618-aa88-bc53db3271e6"
+      }
     }
   }
 }
